@@ -9,7 +9,8 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
             this._.options.container = DOM.getById(this._.options.container);
         }
 
-        DOM.addListener(this._.options.container, 'mousedown', this._handleMouseDown.bind(this));
+        this._handleMouseDown = this._handleMouseDown.bind(this);
+        DOM.addListener(this._.options.container, 'mousedown', this._handleMouseDown);
 
     }, {
         STATIC: {
@@ -19,6 +20,10 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
                 boundary: 'parent', // null = self, "parent" = parent element, other string = tag.class selector for DOM.closest
                 horizontal: false
             }
+        },
+
+        destroy: function () {
+            DOM.removeListener(this._.options.container, 'mousedown', this._handleMouseDown);
         },
 
         _handleMouseDown: function (mdevt) {
