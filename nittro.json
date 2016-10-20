@@ -1,0 +1,22 @@
+{
+    "files": {
+        "js": [
+            "src/js/Nittro/Extras/CheckList/CheckList.js"
+        ],
+        "css": [
+        ]
+    },
+    "bridges": {
+        "nittro-di": {
+            "files": [
+                "src/js/Nittro/Extras/CheckList/Bridges/CheckListDI/CheckListExtension.js"
+            ],
+            "extensions": {
+                "checklist": "Nittro.Extras.CheckList.Bridges.CheckListDI.CheckListExtension()"
+            }
+        }
+    },
+    "compat": {
+        "es5": true
+    }
+}
