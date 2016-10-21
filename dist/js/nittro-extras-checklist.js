@@ -9,7 +9,10 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
             this._.options.container = DOM.getById(this._.options.container);
         }
 
-        DOM.addListener(this._.options.container, 'mousedown', this._handleMouseDown.bind(this));
+        this._handleMouseDown = this._handleMouseDown.bind(this);
+        this._handleClick = this._handleClick.bind(this);
+        DOM.addListener(this._.options.container, 'mousedown', this._handleMouseDown);
+        DOM.addListener(this._.options.container, 'click', this._handleClick);
 
     }, {
         STATIC: {
@@ -18,6 +21,20 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
                 items: null,        // null = input[type="checkbox"], string = class name
                 boundary: 'parent', // null = self, "parent" = parent element, other string = tag.class selector for DOM.closest
                 horizontal: false
+            }
+        },
+
+        destroy: function () {
+            DOM.removeListener(this._.options.container, 'mousedown', this._handleMouseDown);
+            DOM.removeListener(this._.options.container, 'click', this._handleClick);
+        },
+
+        _handleClick: function(evt) {
+            var target = this._getTarget(evt.target),
+                items = this._getItems();
+
+            if (items.indexOf(target) !== -1) {
+                evt.preventDefault();
             }
         },
 
@@ -37,19 +54,31 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
             var boundaryElems = this._getBoundaryElements(items),
                 boundaries = this._getBoundaries(boundaryElems, start),
                 originalStates = items.map(this._getItemState.bind(this)),
-                state = !this._getItemState(target);
+                states,
+                state = !originalStates[start];
 
             this._setItemState(target, state);
 
-            var handleMove = this._getMoveHandler(items, boundaries, originalStates, start, state);
+            states = originalStates.slice();
+            states[start] = state;
 
-            var end = function (evt) {
-                evt && evt.preventDefault();
+            var handleMove = this._getMoveHandler(items, boundaries, originalStates, states, start, state);
+
+            var end = function (muevt) {
+                muevt && muevt.preventDefault();
 
                 DOM.removeListener(document, 'mousemove', handleMove);
                 DOM.removeListener(document, 'mouseup', end);
-                this._setItemState(target, originalStates[start]);
-                this.trigger('stop');
+
+                if (muevt && this._getTarget(muevt.target) === target || states.some(function(s, i) { return i !== start && s !== originalStates[i]; })) {
+                    this.trigger('change');
+
+                } else {
+                    this._setItemState(target, !state);
+
+                }
+
+                this.trigger('end');
 
             }.bind(this);
 
@@ -58,12 +87,10 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
 
         },
 
-        _getMoveHandler: function(items, boundaries, originalStates, start, state) {
+        _getMoveHandler: function(items, boundaries, originalStates, states, start, state) {
             var horiz = this._.options.horizontal,
-                states = originalStates.slice(),
                 pos,
-                n = items.length,
-                changed = false;
+                n = items.length;
 
             return function (evt) {
                 evt.preventDefault();
@@ -77,17 +104,11 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
                                 this._setItemState(items[i], state);
                                 states[i] = state;
 
-                                if (!changed) {
-                                    changed = true;
-                                    originalStates[start] = state;
-                                }
                             }
-                        } else {
-                            if (states[i] !== !state) {
-                                this._setItemState(items[i], !state);
-                                states[i] = !state;
+                        } else if (states[i] !== !state) {
+                            this._setItemState(items[i], !state);
+                            states[i] = !state;
 
-                            }
                         }
                     }
                 }
