@@ -1,7 +1,7 @@
 {
     "files": {
         "js": [
-            "src/js/Nittro/Extras/CheckList/CheckList.js"
+            "src/CheckList.js"
         ],
         "css": [
         ]
@@ -9,7 +9,7 @@
     "bridges": {
         "nittro-di": {
             "files": [
-                "src/js/Nittro/Extras/CheckList/Bridges/CheckListDI/CheckListExtension.js"
+                "src/Bridges/CheckListDI/CheckListExtension.js"
             ],
             "extensions": {
                 "checklist": "Nittro.Extras.CheckList.Bridges.CheckListDI.CheckListExtension()"
