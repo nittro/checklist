@@ -2,6 +2,8 @@
     "name": "nittro-extras-checklist",
     "homepage": "https://www.nittro.org",
     "license": "MIT",
+    "author": "Dan Kadera <me@subsonic.cz>",
+    "version": "2.0.0-rc.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/nittro/checklist.git"
@@ -10,5 +12,15 @@
         "url": "https://github.com/nittro/checklist/issues",
         "email": "nittro@nittro.org"
     },
-    "devDependencies": {}
+    "dependencies": {
+        "nittro-core": "^2.0.0-rc.4"
+    },
+    "devDependencies": {
+        "nittro-di": "^2.0.0-rc.2",
+        "gulp": "^3.9.1",
+        "gulp-add-src": "^0.2.0",
+        "gulp-jasmine-browser": "^1.7.1",
+        "gulp-less": "^3.3.0",
+        "phantomjs-prebuilt": "^2.1.14"
+    }
 }
