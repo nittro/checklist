@@ -40,6 +40,7 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
             defaults: {
                 container: null,    // ID or DOM element
                 items: null,        // null = input[type="checkbox"], string = class name
+                target: null,       // null = evt.target.control || evt.target, otherwise provide callback which gets passed evt.target
                 boundary: 'parent', // null = self, "parent" = parent element, other string = tag.class selector for DOM.closest
                 horizontal: false,
                 scroll: true
@@ -168,7 +169,11 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
         },
 
         _getTarget: function (target) {
-            return target;
+            if (this._.options.target) {
+                return this._.options.target.call(null, target);
+            } else {
+                return target.control || target;
+            }
         },
 
         _setItemState: function (item, state) {
