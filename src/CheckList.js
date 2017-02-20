@@ -56,7 +56,8 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
             var target = this._getTarget(evt.target),
                 items = this._getItems();
 
-            if (items.indexOf(target) !== -1) {
+            if (items.indexOf(target) !== -1 && !(evt.screenX === 0 && evt.screenY === 0)) {
+                // "click" with screenX == screenY == 0 is triggered by space press and we want to allow that
                 evt.preventDefault();
             }
         },
@@ -87,13 +88,18 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
             var handleMove = this._getMoveHandler(items, originalStates, states, start, state, pos);
 
             var end = function (muevt) {
-                muevt && muevt.preventDefault();
+                var endTgt;
+
+                if (muevt) {
+                    muevt.preventDefault();
+                    endTgt = this._getTarget(muevt.target);
+                }
 
                 DOM.removeListener(document, 'mousemove', handleMove);
                 DOM.removeListener(document, 'mouseup', end);
                 this._.scrolling = false;
 
-                if (muevt && this._getTarget(muevt.target) === target || states.some(function(s, i) { return i !== start && s !== originalStates[i]; })) {
+                if (endTgt === target || states.some(function(s, i) { return i !== start && s !== originalStates[i]; })) {
                     this.trigger('change');
 
                 } else {
@@ -103,6 +109,9 @@ _context.invoke('Nittro.Extras.CheckList', function(DOM, Arrays) {
 
                 this.trigger('end');
 
+                if (endTgt && typeof endTgt.focus === 'function') {
+                    endTgt.focus();
+                }
             }.bind(this);
 
             DOM.addListener(document, 'mousemove', handleMove);

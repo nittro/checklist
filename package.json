@@ -3,7 +3,7 @@
     "homepage": "https://www.nittro.org",
     "license": "MIT",
     "author": "Dan Kadera <me@subsonic.cz>",
-    "version": "2.0.0-rc.2",
+    "version": "2.0.0-rc.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/nittro/checklist.git"
