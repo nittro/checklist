@@ -13,10 +13,10 @@
         "email": "nittro@nittro.org"
     },
     "dependencies": {
-        "nittro-core": "^2.0.0-rc.4"
+        "nittro-core": "^2.0.0"
     },
     "devDependencies": {
-        "nittro-di": "^2.0.0-rc.2",
+        "nittro-di": "^2.0.0",
         "gulp": "^3.9.1",
         "gulp-add-src": "^0.2.0",
         "gulp-jasmine-browser": "^1.7.1",
